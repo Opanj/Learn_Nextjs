@@ -13,13 +13,21 @@
     "@types/react": "18.3.9",
     "@types/react-dom": "18.3.0",
     "autoprefixer": "10.4.20",
+    "bcrypt": "^5.1.1",
     "eslint": "8.57.1",
     "eslint-config-next": "14.2.13",
+    "firebase": "^10.13.2",
     "next": "14.2.13",
+    "next-auth": "^4.24.8",
     "postcss": "8.4.47",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "swr": "^2.2.5",
     "tailwindcss": "3.4.13",
     "typescript": "5.6.2"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "sass": "^1.79.3"
   }
 }
