@@ -18,7 +18,13 @@ function ProductView({ products }: { products: ProductType[] }) {
                 key={product.id}
               >
                 <div className={styles.product__content__item__image}>
-                  <img src={product.image} alt="product" />
+                  {/* <img src={product.image} alt="product" /> */}
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    width={500}
+                    height={500}
+                  />
                 </div>
                 <h4 className={styles.product__content__item__name}>
                   {product.name}
