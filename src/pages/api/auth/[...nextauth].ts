@@ -1,8 +1,9 @@
-import { login } from "@/lib/firebase/service";
+import { login, loginWithGoogle } from "@/lib/firebase/service";
 import { compare } from "bcrypt";
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 const authOptions: NextAuthOptions = {
   session: {
@@ -67,6 +68,11 @@ const authOptions: NextAuthOptions = {
         // });
       },
     }),
+    // login dengan google
+    GoogleProvider({
+      clientId: process.env.GOOGLE_OAUTH_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET!,
+    }),
   ],
   callbacks: {
     async jwt({ token, user, account, profile }: any) {
@@ -74,6 +80,30 @@ const authOptions: NextAuthOptions = {
         token.email = user.email;
         token.fullname = user.fullname;
         token.role = user.role;
+      }
+      if (account?.provider === "google") {
+        // login dengan google ada 3 yg akan ditangkap
+        const data = {
+          email: user?.email,
+          fullname: user?.name,
+          image: user?.image,
+          type: "google",
+        };
+        // memanggil sevice login google
+        await loginWithGoogle(
+          data,
+          (res: { status: boolean; message: string; data: any }) => {
+            if (res.status) {
+              token.email = res.data.email;
+              token.fullname = res.data.fullname;
+              token.image = res.data.image;
+              token.type = res.data.type;
+              token.role = res.data.role;
+            }
+          }
+        );
+        console.log(data);
+        // token = data;
       }
       return token;
     },
@@ -83,6 +113,7 @@ const authOptions: NextAuthOptions = {
         session.user.email = token.email;
         session.user.fullname = token.fullname;
         session.user.role = token.role;
+        session.user.image = token.image;
       }
       // console.log(session, token);
       return session;

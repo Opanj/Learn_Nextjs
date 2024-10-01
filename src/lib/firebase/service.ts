@@ -8,6 +8,7 @@ import {
   query,
   where,
   addDoc,
+  updateDoc,
 } from "firebase/firestore";
 import app from "./init";
 import bcrypt from "bcrypt";
@@ -101,6 +102,48 @@ export async function register(
       .catch((error) => {
         // callback({ status: false, message: "Register failed" });
         callback({ status: false, message: error });
+      });
+  }
+}
+
+// services login google (dipanggil di nextAuth.tsx)
+export async function loginWithGoogle(userData: any, callback: any) {
+  // melakukan cek data user ke database
+  const qry = query(
+    collection(firestore, "users"),
+    where("email", "==", userData.email)
+  );
+  const snapshot = await getDocs(qry);
+  const data: any = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+  // pengecekan data user
+  if (data.length > 0) {
+    userData.role = data[0].role;
+    await updateDoc(doc(firestore, "users", data[0].id), userData)
+      .then(() => {
+        callback({
+          status: true,
+          message: "Login with google success",
+          data: userData,
+        });
+      })
+      .catch(() => {
+        callback({ status: false, message: "Login with google failed" });
+      });
+  } else {
+    userData.role = "member";
+    await addDoc(collection(firestore, "users"), userData)
+      .then(() => {
+        callback({
+          status: true,
+          message: "Login with google success",
+          data: userData,
+        });
+      })
+      .catch(() => {
+        callback({ status: false, message: "Login with google failed" });
       });
   }
 }

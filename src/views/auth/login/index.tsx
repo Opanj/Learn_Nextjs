@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import styles from "./login.module.scss";
 import { signIn } from "next-auth/react";
+import { redirect } from "next/dist/server/api-utils";
 
 function LoginView() {
   const [isLoading, setIsLoading] = useState(false);
@@ -45,7 +46,7 @@ function LoginView() {
       <form
         action=""
         onSubmit={hendleSubmit}
-        className="flex flex-col gap-2 border p-4 rounded"
+        className="flex flex-col gap-2 p-4 rounded"
       >
         {error && <p className={styles.login}>{error}</p>}
         <label htmlFor="email">Email </label>
@@ -74,6 +75,17 @@ function LoginView() {
           {isLoading ? "Loading..." : "Login"}
         </button>
       </form>
+      <button
+        className="bg-blue-600 py-2 px-3 rounded-xl"
+        onClick={() =>
+          signIn("google", {
+            callbackUrl,
+            redirect: false,
+          })
+        }
+      >
+        Login with Google
+      </button>
       <p className="mt-2">
         Belum punya akun?
         <Link href={"/auth/register"} className="text-blue-500 hover:underline">

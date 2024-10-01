@@ -23,19 +23,17 @@ function Navbar() {
             {data
               ? data.user?.role === "admin" && <a href="/admin">Admin</a>
               : null}
-            {/* <p className="mx-2">Welcome {data.user?.fullname}</p> */}
             <a
-              className="mx-2 bg-white rounded-full p-2 text-blue-500"
+              className="mx-2 bg-white rounded-full text-blue-500"
               href="/profile"
             >
-              img
-              {/* <img
-                src="/opan.jpg"
-                alt="profile"
+              <img
+                src={data.user?.image || "avatar.png"}
+                alt={data.user?.fullname}
                 width={40}
                 height={40}
                 className="rounded-full"
-              /> */}
+              />
             </a>
             <button
               className="bg-white text-blue-500 mx-2 p-2 rounded"
