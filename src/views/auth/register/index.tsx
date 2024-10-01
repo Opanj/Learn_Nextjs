@@ -74,7 +74,7 @@ function RegisterView() {
         />
         <button
           type="submit"
-          className="bg-blue-600 text-white py-2 px-3 rounded-xl"
+          className="bg-blue-600 border py-2 px-3 rounded-xl"
           disabled={isLoading}
         >
           {isLoading ? "Loading..." : "Register"}

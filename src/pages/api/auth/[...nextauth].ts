@@ -1,3 +1,5 @@
+import { login } from "@/lib/firebase/service";
+import { compare } from "bcrypt";
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -16,26 +18,42 @@ const authOptions: NextAuthOptions = {
           type: "email",
           placeholder: "jsmith@mail.com",
         },
-        name: { label: "Full Name", type: "text" },
+        // fullname: {
+        //   label: "Full name",
+        //   type: "text",
+        // },
         password: { label: "Password", type: "password" },
       },
 
       // authorize untuk menangkap semua credential yg diinput
       async authorize(credentials) {
-        const { email, name, password } = credentials as {
+        const { email, password } = credentials as {
           email: string;
-          name: string;
           password: string;
         };
 
-        const user: any = {
-          id: 1,
-          email: email,
-          password: password,
-          name: name,
-        };
+        // register user
+        // const user: any = {
+        //   id: 1,
+        //   email: email,
+        //   password: password,
+        //   fullname: fullname,
+        // };
+        // if (user) {
+        //   // console.log(user);
+        //   return user;
+        // } else {
+        //   return null;
+        // }
+
+        // login user
+        const user: any = await login({ email });
+        // melakukan pengecekan
         if (user) {
-          // console.log(user);
+          const passwordConfirm = await compare(password, user.password);
+          if (!passwordConfirm) {
+            return null;
+          }
           return user;
         } else {
           return null;
@@ -51,27 +69,28 @@ const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, user, account, profile }: any) {
       if (account?.provider === "credentials") {
         token.email = user.email;
+        token.fullname = user.fullname;
+        token.role = user.role;
       }
-
-      // console.log(token, user, account);
       return token;
     },
     async session({ session, token }: any) {
       if (token) {
         // "email" in token
         session.user.email = token.email;
+        session.user.fullname = token.fullname;
+        session.user.role = token.role;
       }
-
       // console.log(session, token);
       return session;
     },
   },
-  // pages: {
-  //   signIn: "/auth/login",
-  // },
+  pages: {
+    signIn: "/auth/login",
+  },
 };
 
 export default NextAuth(authOptions);

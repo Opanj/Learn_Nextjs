@@ -1,13 +1,13 @@
 import { useSession } from "next-auth/react";
 
 function ProfilePage() {
-  const { data: session, status } = useSession();
-  // console.log();
+  const { data }: any = useSession();
+  console.log(data);
   return (
     <div>
       <h1>Profile</h1>
-      <p>Name: {session?.user?.name}</p>
-      <p>Email: {session?.user?.email}</p>
+      <p>Name: {data?.user?.fullname}</p>
+      {/* <p>Email: {session?.user?.email}</p> */}
     </div>
   );
 }

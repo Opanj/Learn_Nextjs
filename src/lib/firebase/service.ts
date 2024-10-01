@@ -46,6 +46,25 @@ export async function retrieveDataById(collectionName: string, id: string) {
   return data;
 }
 
+// services login user
+export async function login(userData: { email: string }) {
+  const qry = query(
+    collection(firestore, "users"),
+    where("email", "==", userData.email)
+  );
+  const snapshot = await getDocs(qry);
+  const data = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  if (data.length > 0) {
+    return data[0];
+  } else {
+    return null;
+  }
+}
+
 // services untuk register user
 export async function register(
   userData: {

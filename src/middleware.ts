@@ -19,4 +19,6 @@ export function mainMiddleware(req: NextRequest) {
 //   matcher: ["/product", "/about"], // untuk menghendel lebih dari satu path
 // };
 
-export default withAuth(mainMiddleware, ["/profile"]);
+export default withAuth(mainMiddleware, ["/profile", "/admin"]);
+
+// admin disetting di withAuth

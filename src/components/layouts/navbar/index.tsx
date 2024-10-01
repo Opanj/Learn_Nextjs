@@ -1,8 +1,8 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 
 function Navbar() {
-  const { data } = useSession();
-  console.log(data);
+  const { data }: any = useSession();
+  // console.log(data);
   return (
     <nav className="p-2 bg-blue-500 text-white">
       <div className="container p-2 flex flex-row items-center justify-between">
@@ -20,7 +20,10 @@ function Navbar() {
         </div>
         {data ? (
           <div className="flex flex-row items-center">
-            {/* <p className="mx-2">Welcome {data.user?.name}</p> */}
+            {data
+              ? data.user?.role === "admin" && <a href="/admin">Admin</a>
+              : null}
+            {/* <p className="mx-2">Welcome {data.user?.fullname}</p> */}
             <a
               className="mx-2 bg-white rounded-full p-2 text-blue-500"
               href="/profile"
